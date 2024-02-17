@@ -1,0 +1,82 @@
+---
+title: "intro to tidyverse and ggplot2"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+```
+```{r}
+data("mtcars")
+carData=mtcars
+ls()
+head(carData,5)
+str(carData)
+```
+
+```{r}
+str(carData) #structure of the data
+```
+```{r}
+colnames(carData)
+nrow(carData)
+ncol(carData)
+```
+```{r}
+#mutate() function adds new column to the dataframe
+carData %>% mutate(cyltype='High')
+#we decided to add a new column names cyltpe with value High
+carData %>% mutate(cyltype=ifelse(cyl>4,'high','Low'))
+carData %>% mutate(wtton=0.45*wt)
+#adding another column called wtton where its value will be 0.45 * wt column
+#all these mutations are temporary but if you want to make it permanent
+carData.new=carData%>%mutate(carData %>% mutate(wtton=0.45*wt),cyltype=ifelse(cyl>4,'high','Low'))
+
+```
+```{r}
+str(carData.new)
+carData.new
+```
+```{r}
+#summarize() function is used to collapse all rows and returns a summary
+carData.new %>% summarize(mean(wtton),mean(disp))
+
+```
+```{r}
+#groupby function is used to group samples according to features
+carData.new %>% group_by(cyltype)
+#group cars according to cyltype and calculate mean weigth and mean displacement
+carData.new %>% group_by(cyltype) %>% summarize(mean(wtton),mean(disp))
+
+```
+```{r}
+#filter() function is used to filter based on specific condition
+carData.new %>% filter(wtton>2 & hp>210 & mpg>12)
+```
+```{r}
+#select() function is used to retain specific features 
+carData.new %>% select(wtton)#select only the specific column
+#to select column other than wtton
+carData.new %>% select(-wtton,-cyl)
+#-wtton means select all except wtton 
+carData.new %>% select(mpg,drat)
+
+```
+
+```{r}
+#moving on to ggplot2 package
+#function name is ggplot
+carplot=ggplot(data=carData)
+#to specify which variable to plot we use aes() to specify aesthetic plotting
+carplot=ggplot(data=carData,aes(x=wt,y=disp))
+#use geometric elements using geom_type() function
+carplot=carplot+geom_area()
+carplot
+
+#adding labels and title
+carplot=carplot+labs(x='weight(1000 lbs )',y='displacement(cu. in)',title="weight vs displacement ")
+carplot
+
+
+```
+
+
