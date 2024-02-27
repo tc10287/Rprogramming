@@ -1,0 +1,71 @@
+---
+title: "graphing with ggplot2 part1"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+```
+```{r}
+data('mpg')
+mpg_data=mpg
+mpg_data
+```
+```{r}
+p1=ggplot(data=mpg_data,aes(x=displ,y=hwy,color=manufacturer))+geom_point()
+p1=p1+labs(x="displacement (in litres)",y="mileage (MPG)",title = " mileage vs displacement")
+p1
+```
+```{r}
+#this plots a scatterplot where colors are marked accordint to its class value, note that color specification is inside the aes() function
+p2=ggplot(data=mpg_data)
+p2=p2+geom_point(aes(x=displ,y=hwy,color=class))
+p2
+```
+```{r}
+#this plot makes the point into blue color and of shape square, note that color and shape is outsite aes() function
+p3=ggplot(data=mpg_data) + geom_point(aes(x=displ,y=hwy),color="blue",shape="square")
+p3
+
+```
+```{r}
+#facet is a subplot
+p4=ggplot(data=mpg_data)+geom_point(aes(x=displ,y=hwy))+facet_wrap(~class,nrow=3)
+#~class means we're considering subplots based on class, and nrow means number of rows
+p4
+```
+```{r}
+#this is a scatter plot that makes a subplot based on manufacturer and colors based on their class
+#as you can see, 2 seaters are mostly from Chevrolet
+p5=ggplot(data=mpg_data)+geom_point(aes(x=displ,y=hwy,color=class))+facet_wrap(~manufacturer,nrow=3)
+p5
+```
+```{r}
+p6=ggplot(data=mpg_data)+geom_point(aes(x=displ,y=hwy))+facet_grid(drv~cyl)
+p6
+#as you can see there's few cars with 5 cylinders here
+```
+```{r}
+#exercise
+#to find number of levels in cyl feature
+factor(mpg_data$cyl)
+#how many cars of each cyl type are there
+mpg_data%>%count(cyl)
+#filter those cars with 5 cyl
+mpg_data=mpg_data%>%filter(!(cyl %in% c(5)))
+mpg_data
+p7=ggplot(data=mpg_data)+geom_point(aes(x=displ,y=hwy))+facet_grid(drv~cyl)
+p7
+#after filtering we can see that there's no car with 5 cylinders. that it has been filtered out
+```
+```{r}
+#map color aes to cylinders
+p8=ggplot(data=mpg_data)+geom_point(aes(x=displ,y=hwy,color=factor(cyl),shape=class))
+#if we use cyl, the color schema wouldn't show us the difference
+#so we'll use factor(cyl)
+p8
+```
+
+
+
